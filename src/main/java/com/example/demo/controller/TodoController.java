@@ -1,11 +1,12 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.model.Error;
+import com.example.demo.model.Todo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -67,7 +68,7 @@ public class TodoController {
                 .findFirst()
                 .ifPresentOrElse(
                         todo -> todoList.remove(todo),
-                        () -> { }
+                        () -> { throw new Error("fail"); }
                 );
         return "";
     }

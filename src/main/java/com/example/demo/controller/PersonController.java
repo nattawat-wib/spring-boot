@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("person")
 public class PersonController {
 
     private final PersonDAO personDao;
@@ -18,7 +19,7 @@ public class PersonController {
         this.personDao = personDao;
     }
 
-    @PostMapping("person")
+    @PostMapping("")
     public ApiResponse InsertPerson(@RequestBody Person form) {
         Person newPerson = new Person(form.getFname(), form.getLname());
         personDao.save(newPerson);
@@ -26,30 +27,32 @@ public class PersonController {
         return new ApiResponse(201, "insert person successfully");
     }
 
-    @DeleteMapping("person/{id}")
+    @DeleteMapping("{id}")
     public ApiResponse deletePerson(@PathVariable int id) {
         personDao.delete(id);
 
         return new ApiResponse(200, "delete person successfully");
     }
 
-    @GetMapping("person")
-    public ApiResponse getPerson(@RequestParam String id) {
-        Person person = personDao.get(id);
-
-        System.out.println(person);
-
-        return new ApiResponse(200, "get user successfully", person);
+    @GetMapping("")
+    public ApiResponse getPerson(@RequestParam(required = false) String id) {
+        if(id != null && !id.isEmpty()) {
+            Person person = personDao.get(id);
+            return new ApiResponse(200, "get user successfully", person);
+        } else {
+            List<Person> personList = personDao.getAll();
+            return new ApiResponse(200, "get user successfully", personList);
+        }
     }
 
-    @GetMapping("persons")
+    @GetMapping("{id}")
     public ApiResponse getAllPerson() {
         List<Person> allPerson = personDao.getAll();
 
         return new ApiResponse(200, "get user successfully", allPerson);
     }
 
-    @PutMapping("person/{id}")
+    @PutMapping("{id}")
     public ApiResponse updatePerson(@PathVariable String id, @RequestBody Person person) {
 
         Person updatePerson = personDao.get(id);

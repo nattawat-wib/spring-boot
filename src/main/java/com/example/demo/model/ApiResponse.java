@@ -17,7 +17,6 @@ public class ApiResponse {
         this.person = person;
     }
 
-
     public ApiResponse(int status, String message, List<Person> allPerson) {
         this.status = status;
         this.message = message;
